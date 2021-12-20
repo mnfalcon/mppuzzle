@@ -30,29 +30,32 @@ void AMovingPlatform::Tick(float DeltaSeconds)
 	
 	if (HasAuthority())
 	{
-		FVector Location = GetActorLocation();
-		float JourneyLength = (GlobalTargetLocation - GlobalStartLocation).Size();
-		float JourneyTravelled = (Location - GlobalStartLocation).Size();
-
-		if (JourneyTravelled >= JourneyLength)
+		if (ActiveTriggers > RequiredTriggers/*RequiredTriggers <= ActiveTriggers */ )
 		{
-			FVector Temp = GlobalTargetLocation;
-			GlobalTargetLocation = GlobalStartLocation;
-			GlobalStartLocation = Temp;
+			FVector Location = GetActorLocation();
+			float JourneyLength = (GlobalTargetLocation - GlobalStartLocation).Size();
+			float JourneyTravelled = (Location - GlobalStartLocation).Size();
+
+			if (JourneyTravelled >= JourneyLength)
+			{
+				FVector Temp = GlobalTargetLocation;
+				GlobalTargetLocation = GlobalStartLocation;
+				GlobalStartLocation = Temp;
+			}
+			FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
+			Location += Direction * DeltaSeconds * Speed;
+			SetActorLocation(Location);
+
+
+
+			// my take
+			/*if (FVector::Dist(GlobalStartLocation, Location) > FVector::Dist(GlobalStartLocation, GlobalTargetLocation))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Hereeee"));
+				FVector Temp = GlobalTargetLocation;
+				GlobalTargetLocation = GlobalStartLocation;
+				GlobalStartLocation = Temp;
+			}*/
 		}
-		FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
-		Location += Direction * DeltaSeconds * Speed;
-		SetActorLocation(Location);
-		
-
-
-		// my take
-		/*if (FVector::Dist(GlobalStartLocation, Location) > FVector::Dist(GlobalStartLocation, GlobalTargetLocation))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Hereeee"));
-			FVector Temp = GlobalTargetLocation;
-			GlobalTargetLocation = GlobalStartLocation;
-			GlobalStartLocation = Temp;
-		}*/
 	}
 }

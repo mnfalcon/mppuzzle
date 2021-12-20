@@ -20,8 +20,11 @@ void ARotatingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetReplicates(true);
-	SetReplicateMovement(true);
+	if (HasAuthority())
+	{
+		SetReplicates(true);
+		SetReplicateMovement(true);
+	}
 
 	PivotPointLocation = PivotPoint->GetComponentLocation();
 	PlatformMesh->SetRelativeLocation(PlatformStartLocation);
@@ -31,5 +34,12 @@ void ARotatingPlatform::BeginPlay()
 void ARotatingPlatform::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	AddActorWorldRotation(RotatorSpeed * DeltaSeconds);
+
+	if (HasAuthority())
+	{
+		if (ActiveTriggers > RequiredTriggers)
+		{
+			AddActorWorldRotation(RotatorSpeed * DeltaSeconds);
+		}
+	}
 }

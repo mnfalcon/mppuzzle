@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/StaticMeshActor.h"
+#include "PlatformInterface.h"
 #include "RotatingPlatform.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MULTIPLAYERPUZZLE_API ARotatingPlatform : public AStaticMeshActor
+class MULTIPLAYERPUZZLE_API ARotatingPlatform : public APlatformInterface
 {
 	GENERATED_BODY()
 private:

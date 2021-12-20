@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/StaticMeshActor.h"
+#include "PlatformInterface.h"
 #include "MovingPlatform.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MULTIPLAYERPUZZLE_API AMovingPlatform : public AStaticMeshActor
+class MULTIPLAYERPUZZLE_API AMovingPlatform : public APlatformInterface
 {
 	GENERATED_BODY()
 	
@@ -23,6 +23,7 @@ private:
 
 	FVector GlobalTargetLocation;
 	FVector GlobalStartLocation;
+
 protected:
 	virtual void BeginPlay() override;
 public:
