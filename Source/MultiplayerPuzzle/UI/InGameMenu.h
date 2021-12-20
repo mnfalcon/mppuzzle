@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "MenuWidget.h"
 #include "InGameMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MULTIPLAYERPUZZLE_API UInGameMenu : public UUserWidget
+class MULTIPLAYERPUZZLE_API UInGameMenu : public UMenuWidget
 {
 	GENERATED_BODY()
 	
@@ -33,11 +33,4 @@ private:
 protected:
 
 	virtual bool Initialize() override;
-
-public:
-	
-	UFUNCTION()
-		void OpenMenu();
-	UFUNCTION()
-		void CloseMenu();
 };

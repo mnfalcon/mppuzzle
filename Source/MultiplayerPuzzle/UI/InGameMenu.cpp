@@ -25,42 +25,6 @@ bool UInGameMenu::Initialize()
 	return true;
 }
 
-void UInGameMenu::OpenMenu()
-{
-	this->AddToViewport();
-
-	UWorld* World = GetWorld();
-	if (!World) return;
-
-	APlayerController* PC = World->GetFirstPlayerController();
-	if (!PC) return;
-
-	FInputModeUIOnly InputModeData;
-	InputModeData.SetWidgetToFocus(this->TakeWidget());
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	PC->SetInputMode(InputModeData);
-	PC->bShowMouseCursor = true;
-
-	UE_LOG(LogTemp, Warning, TEXT("Opening InGameMenu"));
-}
-
-void UInGameMenu::CloseMenu()
-{
-	this->RemoveFromViewport();
-
-	UWorld* World = GetWorld();
-	if (!World) return;
-
-	APlayerController* PC = GetGameInstance()->GetFirstLocalPlayerController();
-	if (!PC) return;
-
-	FInputModeGameOnly InputModeData;
-	PC->SetInputMode(InputModeData);
-	PC->bShowMouseCursor = false;
-
-}
-
 void UInGameMenu::QuitGame()
 {
 	APlayerController* PC = GetGameInstance()->GetFirstLocalPlayerController();

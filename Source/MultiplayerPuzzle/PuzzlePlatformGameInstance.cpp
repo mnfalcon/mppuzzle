@@ -52,7 +52,7 @@ void UPuzzlePlatformGameInstance::HostGame()
 {
 	if (Menu)
 	{
-		Menu->Teardown();
+		Menu->CloseMenu();
 	}
 	UEngine* Engine = GetEngine();
 
@@ -71,7 +71,7 @@ void UPuzzlePlatformGameInstance::JoinGame(const FString& Address)
 {
 	if (Menu)
 	{
-		Menu->Teardown();
+		Menu->CloseMenu();
 	}
 	UEngine* Engine = GetEngine();
 
@@ -97,7 +97,7 @@ void UPuzzlePlatformGameInstance::LoadMenu()
 
 	if (Menu == nullptr) return;
 
-	Menu->Setup();
+	Menu->OpenMenu();
 	Menu->SetMenuInterface(this);
 }
 
@@ -119,4 +119,5 @@ void UPuzzlePlatformGameInstance::CloseInGameMenu()
 	if (InGameMenu == nullptr) return;
 
 	InGameMenu->CloseMenu();
+	UE_LOG(LogTemp, Warning, TEXT("Closing"));
 }

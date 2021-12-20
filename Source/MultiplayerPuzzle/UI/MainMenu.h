@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
 #include "MenuInterface.h"
+#include "MenuWidget.h"
 #include "MainMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MULTIPLAYERPUZZLE_API UMainMenu : public UUserWidget
+class MULTIPLAYERPUZZLE_API UMainMenu : public UMenuWidget
 {
 	GENERATED_BODY()
 	
@@ -58,7 +58,4 @@ protected:
 
 public:
 	void SetMenuInterface(IMenuInterface* MenuInterface);
-
-	void Setup();
-	void Teardown();
 };

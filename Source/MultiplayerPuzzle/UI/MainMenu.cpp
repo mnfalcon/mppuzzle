@@ -35,40 +35,6 @@ void UMainMenu::SetMenuInterface(IMenuInterface* MenuInterfaceImplementation)
 	this->MenuInterface = MenuInterfaceImplementation;
 }
 
-void UMainMenu::Setup()
-{
-	this->AddToViewport();
-
-	UWorld* World = GetWorld();
-	if (!World) return;
-
-	APlayerController* PC = World->GetFirstPlayerController();
-	if (!PC) return;
-
-	FInputModeUIOnly InputModeData;
-	InputModeData.SetWidgetToFocus(this->TakeWidget());
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	PC->SetInputMode(InputModeData);
-	PC->bShowMouseCursor = true;
-}
-
-void UMainMenu::Teardown()
-{
-	this->RemoveFromViewport();
-
-	UWorld* World = GetWorld();
-	if (!World) return;
-
-	APlayerController* PC = World->GetFirstPlayerController();
-	if (!PC) return;
-
-	FInputModeGameOnly InputModeData;
-	PC->SetInputMode(InputModeData);
-	PC->bShowMouseCursor = false;
-
-}
-
 void UMainMenu::HostGame()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Hosting game"));
