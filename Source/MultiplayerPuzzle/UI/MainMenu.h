@@ -30,6 +30,9 @@ private:
 		UButton* ButtonBackToMain;
 
 	UPROPERTY(meta = (BindWidget))
+		UButton* ButtonQuitGame;
+
+	UPROPERTY(meta = (BindWidget))
 		class UWidgetSwitcher* MenuSwitcher;
 
 	UPROPERTY(meta = (BindWidget))

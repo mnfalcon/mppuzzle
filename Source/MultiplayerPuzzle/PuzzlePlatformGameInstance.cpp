@@ -111,13 +111,3 @@ void UPuzzlePlatformGameInstance::OpenInGameMenu()
 
 	InGameMenu->OpenMenu();
 }
-
-void UPuzzlePlatformGameInstance::CloseInGameMenu()
-{
-	if (InGameMenuClass == nullptr) return;
-
-	if (InGameMenu == nullptr) return;
-
-	InGameMenu->CloseMenu();
-	UE_LOG(LogTemp, Warning, TEXT("Closing"));
-}

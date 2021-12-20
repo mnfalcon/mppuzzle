@@ -37,6 +37,4 @@ public:
 
 	UFUNCTION(exec, BlueprintCallable)
 		void OpenInGameMenu();
-	UFUNCTION(exec, BlueprintCallable)
-		void CloseInGameMenu();
 };

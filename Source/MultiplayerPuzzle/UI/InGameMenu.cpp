@@ -4,7 +4,6 @@
 #include "InGameMenu.h"
 #include "Components/Button.h"
 #include "../PuzzlePlatformGameInstance.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 bool UInGameMenu::Initialize()
 {
@@ -25,18 +24,10 @@ bool UInGameMenu::Initialize()
 	return true;
 }
 
-void UInGameMenu::QuitGame()
-{
-	APlayerController* PC = GetGameInstance()->GetFirstLocalPlayerController();
-	if (!PC) return;
-
-	UKismetSystemLibrary::QuitGame(GetWorld(), PC, EQuitPreference::Quit, true);
-}
-
 void UInGameMenu::BackToMainMenu()
 {
 	APlayerController* PC = GetGameInstance()->GetFirstLocalPlayerController();
 	if (!PC) return;
 
-	PC->ClientTravel("/UI/MainMenu", ETravelType::TRAVEL_Absolute);
+	PC->ClientTravel("/UI/MainMenu/", ETravelType::TRAVEL_Absolute);
 }

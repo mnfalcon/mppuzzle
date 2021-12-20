@@ -26,8 +26,6 @@ private:
 		UButton* ButtonCloseWidget;
 
 	UFUNCTION()
-		void QuitGame();
-	UFUNCTION()
 		void BackToMainMenu();
 
 protected:

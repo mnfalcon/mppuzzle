@@ -13,8 +13,11 @@ UCLASS()
 class MULTIPLAYERPUZZLE_API UMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
-public:
 
+protected:
+	UFUNCTION()
+		void QuitGame();
+public:
 	UFUNCTION()
 		virtual void OpenMenu();
 	UFUNCTION()

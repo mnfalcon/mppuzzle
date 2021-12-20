@@ -2,6 +2,7 @@
 
 
 #include "MenuWidget.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 void UMenuWidget::OpenMenu()
 {
@@ -37,4 +38,13 @@ void UMenuWidget::CloseMenu()
 	PC->SetInputMode(InputModeData);
 	PC->bShowMouseCursor = false;
 
+}
+
+void UMenuWidget::QuitGame()
+{
+	APlayerController* PC = GetGameInstance()->GetFirstLocalPlayerController();
+	if (!PC) return;
+
+	PC->ConsoleCommand("quit");
+	//UKismetSystemLibrary::QuitGame(GetWorld(), PC, EQuitPreference::Quit, true);
 }

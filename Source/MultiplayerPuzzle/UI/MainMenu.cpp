@@ -27,6 +27,10 @@ bool UMainMenu::Initialize()
 	ButtonJoin->OnClicked.AddDynamic(this, &UMainMenu::JoinGame);
 	UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonJoin->GetName());
 
+	if (!ButtonQuitGame) return false;
+	ButtonQuitGame->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
+	UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonQuitGame->GetName());
+
 	return true;
 }
 
