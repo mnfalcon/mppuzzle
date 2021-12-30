@@ -13,23 +13,23 @@ bool UMainMenu::Initialize()
 
 	if (!ButtonHost) return false;
 	ButtonHost->OnClicked.AddDynamic(this, &UMainMenu::HostGame);
-	UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonHost->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonHost->GetName());
 
 	if (!ButtonOpenJoinMenu) return false;
 	ButtonOpenJoinMenu->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
-	UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonOpenJoinMenu->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonOpenJoinMenu->GetName());
 
 	if (!ButtonBackToMain) return false;
 	ButtonBackToMain->OnClicked.AddDynamic(this, &UMainMenu::BackToMainMenu);
-	UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonBackToMain->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonBackToMain->GetName());
 
 	if (!ButtonJoin) return false;
 	ButtonJoin->OnClicked.AddDynamic(this, &UMainMenu::JoinGame);
-	UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonJoin->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonJoin->GetName());
 
 	if (!ButtonQuitGame) return false;
 	ButtonQuitGame->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
-	UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonQuitGame->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonQuitGame->GetName());
 
 	return true;
 }
@@ -64,7 +64,7 @@ void UMainMenu::OpenJoinMenu()
 {
 	if (!MenuSwitcher) return;
 	if (!JoinMenu) return;
-	UE_LOG(LogTemp, Warning, TEXT("Opening Join Menu"));
+	//UE_LOG(LogTemp, Warning, TEXT("Opening Join Menu"));
 	MenuSwitcher->SetActiveWidget(JoinMenu);
 }
 
@@ -72,7 +72,7 @@ void UMainMenu::BackToMainMenu()
 {
 	if (!MenuSwitcher) return;
 	if (!MainMenu) return;
-	UE_LOG(LogTemp, Warning, TEXT("Opening Join Menu"));
+	//UE_LOG(LogTemp, Warning, TEXT("Opening Join Menu"));
 
 	MenuSwitcher->SetActiveWidget(MainMenu);
 }
