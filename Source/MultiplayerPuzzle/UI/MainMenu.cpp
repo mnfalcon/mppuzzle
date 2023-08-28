@@ -3,9 +3,25 @@
 
 #include "MainMenu.h"
 #include "Components/Button.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/EditableTextBox.h"
 #include "../PuzzlePlatformGameInstance.h"
+#include "Components/TextBlock.h"
+#include "ServerWidget.h"
+
+UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer)
+{
+	static ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/UI/WBP_ServerRow"));
+
+	if (!ensure(ServerRowBPClass.Class != nullptr))
+	{
+		UE_LOG(LogTemp, Error, TEXT("MainMenuBPClass not found!"));
+		return;
+	}
+	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *MainMenuBP.Class->GetName());
+	ServerRowClass = ServerRowBPClass.Class;
+}
 
 bool UMainMenu::Initialize()
 {
@@ -21,6 +37,9 @@ bool UMainMenu::Initialize()
 
 	if (!ButtonBackToMain) return false;
 	ButtonBackToMain->OnClicked.AddDynamic(this, &UMainMenu::BackToMainMenu);
+
+	if (!ServerScreenButtonBackToMain) return false;
+	ServerScreenButtonBackToMain->OnClicked.AddDynamic(this, &UMainMenu::BackToMainMenu);
 	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonBackToMain->GetName());
 
 	if (!ButtonJoin) return false;
@@ -30,6 +49,15 @@ bool UMainMenu::Initialize()
 	if (!ButtonQuitGame) return false;
 	ButtonQuitGame->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
 	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonQuitGame->GetName());
+
+	if (!ButtonOpenServerList) return false;
+	ButtonOpenServerList->OnClicked.AddDynamic(this, &UMainMenu::OpenServerListScreen);
+
+	if (!ButtonJoinServer) return false;
+	ButtonJoinServer->OnClicked.AddDynamic(this, &UMainMenu::JoinServer);
+
+	if (!RefreshServerListButton) return false;
+	RefreshServerListButton->OnClicked.AddDynamic(this, &UMainMenu::RefreshServerList);
 
 	return true;
 }
@@ -46,6 +74,7 @@ void UMainMenu::HostGame()
 	if (MenuInterface)
 	{
 		MenuInterface->HostGame();
+		bIsHosting = true;
 	}
 }
 
@@ -58,6 +87,51 @@ void UMainMenu::JoinGame()
 
 	const FString& IpAddress = IPInputBox->GetText().ToString();
 	MenuInterface->JoinGame(IpAddress);
+}
+
+void UMainMenu::OpenServerListScreen()
+{
+	if (!MenuSwitcher) return;
+	if (!JoinMenu) return;
+	UE_LOG(LogTemp, Warning, TEXT("Opening Server List"));
+	MenuSwitcher->SetActiveWidget(ServerListMenu);
+	if (!MenuInterface) return;
+	MenuInterface->LoadServers();
+}
+
+void UMainMenu::JoinServer()
+{
+	if (MenuInterface != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Joining server"));
+
+	}
+}
+
+void UMainMenu::SetServerList(TArray<FString> serverNames)
+{
+	if (bIsHosting) return;
+
+	UWorld* World = this->GetWorld();
+	if (!ensure(World != nullptr)) return;
+
+	ServerListBox->ClearChildren();
+
+	// TODO add functionality to refresh button in the UI
+
+	for (const FString& serverName : serverNames)
+	{
+		UServerWidget* Row = CreateWidget<UServerWidget>(World, ServerRowClass);
+		Row->ServerName->SetText(FText::FromString(serverName));
+		ServerListBox->AddChild(Row);
+	}
+}
+
+void UMainMenu::RefreshServerList()
+{
+	if (!MenuInterface) return;
+	UE_LOG(LogTemp, Warning, TEXT("Refreshing server list"));
+	MenuInterface->LoadServers();
 }
 
 void UMainMenu::OpenJoinMenu()
@@ -75,5 +149,6 @@ void UMainMenu::BackToMainMenu()
 	//UE_LOG(LogTemp, Warning, TEXT("Opening Join Menu"));
 
 	MenuSwitcher->SetActiveWidget(MainMenu);
+	bIsHosting = false;
 }
 

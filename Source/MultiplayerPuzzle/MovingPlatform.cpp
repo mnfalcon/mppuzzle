@@ -17,7 +17,7 @@ void AMovingPlatform::BeginPlay()
 	if (HasAuthority())
 	{
 		SetReplicates(true);
-		SetReplicateMovement(true); 
+		SetReplicateMovement(true);
 	}
 
 	GlobalStartLocation = GetActorLocation();

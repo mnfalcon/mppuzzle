@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "OnlineSubsystem.h"
 #include "UI/MenuInterface.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "PuzzlePlatformGameInstance.generated.h"
 
 /**
@@ -30,6 +31,7 @@ private:
 	void CreateSession();
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
+	void OnSessionError(const FUniqueNetId& netId, ESessionFailure::Type failureType);
 	void OnFindSessionsComplete(bool Success);
 
 public:
@@ -40,6 +42,8 @@ public:
 	UFUNCTION(exec)
 		void HostGame() override; // overrides from IMenuInterface
 
+	UFUNCTION(exec)
+		void LoadServers() override;
 
 	UFUNCTION(exec)
 		void JoinGame(const FString& Address) override; // overrides from IMenuInterface
@@ -49,4 +53,5 @@ public:
 
 	UFUNCTION(exec, BlueprintCallable)
 		void OpenInGameMenu();
+	void LoadServerList();
 };
