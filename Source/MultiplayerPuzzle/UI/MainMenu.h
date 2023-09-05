@@ -81,7 +81,11 @@ private:
 	UFUNCTION()
 		void RefreshServerList();
 
+	void UpdateChildren();
+
 	IMenuInterface* MenuInterface;
+
+	TOptional<uint32> SelectedIndex;
 
 protected:
 
@@ -93,4 +97,6 @@ public:
 	UMainMenu(const FObjectInitializer& ObjectInitializer);
 
 	void SetServerList(TArray<FString> serverNames);
+
+	void SetSelectedIndex(uint32 index);
 };

@@ -101,10 +101,14 @@ void UMainMenu::OpenServerListScreen()
 
 void UMainMenu::JoinServer()
 {
-	if (MenuInterface != nullptr)
+	if (MenuInterface != nullptr && SelectedIndex.IsSet())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Joining server"));
-
+		MenuInterface->JoinGame(SelectedIndex.GetValue());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Selected index not set"));
 	}
 }
 
@@ -118,13 +122,20 @@ void UMainMenu::SetServerList(TArray<FString> serverNames)
 	ServerListBox->ClearChildren();
 
 	// TODO add functionality to refresh button in the UI
-
+	uint32 i = 0;
 	for (const FString& serverName : serverNames)
 	{
 		UServerWidget* Row = CreateWidget<UServerWidget>(World, ServerRowClass);
 		Row->ServerName->SetText(FText::FromString(serverName));
+		Row->Setup(this, i++);
 		ServerListBox->AddChild(Row);
 	}
+}
+
+void UMainMenu::SetSelectedIndex(uint32 index)
+{
+	SelectedIndex = index;
+	UpdateChildren();
 }
 
 void UMainMenu::RefreshServerList()
@@ -132,6 +143,18 @@ void UMainMenu::RefreshServerList()
 	if (!MenuInterface) return;
 	UE_LOG(LogTemp, Warning, TEXT("Refreshing server list"));
 	MenuInterface->LoadServers();
+}
+
+void UMainMenu::UpdateChildren()
+{
+	for (int32 i = 0; i < ServerListBox->GetChildrenCount(); i++)
+	{
+		UServerWidget* row = Cast<UServerWidget>(ServerListBox->GetChildAt(i));
+		if (row != nullptr)
+		{
+			row->Selected = (SelectedIndex.IsSet() && i == SelectedIndex.GetValue());
+		}
+	}
 }
 
 void UMainMenu::OpenJoinMenu()

@@ -33,6 +33,7 @@ private:
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnSessionError(const FUniqueNetId& netId, ESessionFailure::Type failureType);
 	void OnFindSessionsComplete(bool Success);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 public:
 	virtual void Init() override;
@@ -45,6 +46,8 @@ public:
 	UFUNCTION(exec)
 		void LoadServers() override;
 
+	void JoinGame(uint32 Index) override;
+
 	UFUNCTION(exec)
 		void JoinGame(const FString& Address) override; // overrides from IMenuInterface
 
@@ -53,5 +56,6 @@ public:
 
 	UFUNCTION(exec, BlueprintCallable)
 		void OpenInGameMenu();
+	void LogToScreen(FString message, FColor color);
 	void LoadServerList();
 };

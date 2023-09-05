@@ -11,7 +11,6 @@ ARotatingPlatform::ARotatingPlatform()
 	SetRootComponent(PivotPoint);
 	PlatformMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Platform"));
 	PlatformMesh->SetupAttachment(RootComponent);
-
 	SetMobility(EComponentMobility::Movable);
 	SetActorHiddenInGame(false);
 }
