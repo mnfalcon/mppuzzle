@@ -7,9 +7,22 @@
 #include "MenuWidget.h"
 #include "MainMenu.generated.h"
 
+USTRUCT()
+struct FServerData 
+{
+	GENERATED_BODY()
+
+	FString Name;
+	uint16 CurrentPlayers;
+	uint16 MaxPlayers;
+	FString HostUsername;
+	FString SessionId;
+};
+
 /**
  * 
  */
+
 UCLASS()
 class MULTIPLAYERPUZZLE_API UMainMenu : public UMenuWidget
 {
@@ -45,7 +58,7 @@ private:
 	UPROPERTY(meta = (BindWidget))
 		UButton* ButtonQuitGame;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), EditAnywhere)
 		UButton* RefreshServerListButton;
 
 	UPROPERTY(meta = (BindWidget))
@@ -56,6 +69,18 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 		UWidget* MainMenu;
+
+	UPROPERTY(meta = (BindWidget))
+		UWidget* HostGameMenu;
+
+	UPROPERTY(meta = (BindWidget))
+		UButton* HostGameMenuButtonBackToMain;
+
+	UPROPERTY(meta = (BindWidget))
+		UButton* ButtonCreateSession;
+
+	UPROPERTY(meta = (BindWidget))
+		class UEditableTextBox* ServerNameInputBox;
 
 	UPROPERTY(meta = (BindWidget))
 		class UEditableTextBox* IPInputBox;
@@ -80,6 +105,8 @@ private:
 		void BackToMainMenu();
 	UFUNCTION()
 		void RefreshServerList();
+	UFUNCTION()
+		void OpenHostGameMenu();
 
 	void UpdateChildren();
 
@@ -96,7 +123,10 @@ public:
 
 	UMainMenu(const FObjectInitializer& ObjectInitializer);
 
-	void SetServerList(TArray<FString> serverNames);
+	void SetServerList(TArray<FServerData> servers);
 
 	void SetSelectedIndex(uint32 index);
+
+	UPROPERTY(BlueprintReadOnly)
+		bool isLoadingServers = true;
 };

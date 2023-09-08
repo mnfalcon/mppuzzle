@@ -15,11 +15,20 @@ class MULTIPLAYERPUZZLE_API UServerWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), EditAnywhere, BlueprintReadWrite)
 		class UTextBlock* ServerName;
+
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* HostUsername;
+
+	UPROPERTY(meta = (BindWidget))
+		class UTextBlock* PlayerCount;
 
 	UPROPERTY(BlueprintReadOnly)
 		bool Selected = false;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool IsHeader;
 
 	void Setup(class UMainMenu* Parent, uint32 Index);
 private:

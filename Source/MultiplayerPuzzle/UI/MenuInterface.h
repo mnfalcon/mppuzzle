@@ -23,7 +23,7 @@ class MULTIPLAYERPUZZLE_API IMenuInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	virtual void HostGame() = 0;
+	virtual void HostGame(const FString& serverName) = 0;
 	virtual void JoinGame(const FString& Address) = 0;
 	virtual void LoadServers() = 0;
 	virtual void JoinGame(uint32 Index) = 0;

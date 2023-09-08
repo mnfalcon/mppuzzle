@@ -28,12 +28,13 @@ private:
 
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
-	void CreateSession();
+	void CreateSession(const FString& serverName);
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
-	void OnSessionError(const FUniqueNetId& netId, ESessionFailure::Type failureType);
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString = TEXT(""));
 	void OnFindSessionsComplete(bool Success);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	void LoadMainMenu();
 
 public:
 	virtual void Init() override;
@@ -41,12 +42,14 @@ public:
 	UPuzzlePlatformGameInstance(const FObjectInitializer& ObjectInitializer);
 
 	UFUNCTION(exec)
-		void HostGame() override; // overrides from IMenuInterface
+		void HostGame(const FString& serverName) override; // overrides from IMenuInterface
 
 	UFUNCTION(exec)
 		void LoadServers() override;
 
 	void JoinGame(uint32 Index) override;
+
+	void StartSession();
 
 	UFUNCTION(exec)
 		void JoinGame(const FString& Address) override; // overrides from IMenuInterface

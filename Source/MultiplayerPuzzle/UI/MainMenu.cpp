@@ -10,6 +10,7 @@
 #include "Components/TextBlock.h"
 #include "ServerWidget.h"
 
+
 UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/UI/WBP_ServerRow"));
@@ -28,7 +29,7 @@ bool UMainMenu::Initialize()
 	if (!Super::Initialize()) return false;
 
 	if (!ButtonHost) return false;
-	ButtonHost->OnClicked.AddDynamic(this, &UMainMenu::HostGame);
+	ButtonHost->OnClicked.AddDynamic(this, &UMainMenu::OpenHostGameMenu);
 	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *ButtonHost->GetName());
 
 	if (!ButtonOpenJoinMenu) return false;
@@ -59,6 +60,12 @@ bool UMainMenu::Initialize()
 	if (!RefreshServerListButton) return false;
 	RefreshServerListButton->OnClicked.AddDynamic(this, &UMainMenu::RefreshServerList);
 
+	if (!ButtonCreateSession) return false;
+	ButtonCreateSession->OnClicked.AddDynamic(this, &UMainMenu::HostGame);
+
+	if (!HostGameMenuButtonBackToMain) return false;
+	HostGameMenuButtonBackToMain->OnClicked.AddDynamic(this, &UMainMenu::BackToMainMenu);
+
 	return true;
 }
 
@@ -73,7 +80,8 @@ void UMainMenu::HostGame()
 
 	if (MenuInterface)
 	{
-		MenuInterface->HostGame();
+		const FString& serverName = ServerNameInputBox->GetText().ToString();
+		MenuInterface->HostGame(serverName);
 		bIsHosting = true;
 	}
 }
@@ -96,6 +104,7 @@ void UMainMenu::OpenServerListScreen()
 	UE_LOG(LogTemp, Warning, TEXT("Opening Server List"));
 	MenuSwitcher->SetActiveWidget(ServerListMenu);
 	if (!MenuInterface) return;
+	isLoadingServers = true;
 	MenuInterface->LoadServers();
 }
 
@@ -112,7 +121,7 @@ void UMainMenu::JoinServer()
 	}
 }
 
-void UMainMenu::SetServerList(TArray<FString> serverNames)
+void UMainMenu::SetServerList(TArray<FServerData> servers)
 {
 	if (bIsHosting) return;
 
@@ -121,12 +130,16 @@ void UMainMenu::SetServerList(TArray<FString> serverNames)
 
 	ServerListBox->ClearChildren();
 
-	// TODO add functionality to refresh button in the UI
+	isLoadingServers = false;
 	uint32 i = 0;
-	for (const FString& serverName : serverNames)
+	for (const FServerData& server : servers)
 	{
 		UServerWidget* Row = CreateWidget<UServerWidget>(World, ServerRowClass);
-		Row->ServerName->SetText(FText::FromString(serverName));
+		Row->ServerName->SetText(FText::FromString(server.Name));
+		Row->ServerName->SetToolTipText(FText::FromString(server.SessionId));
+		Row->HostUsername->SetText(FText::FromString(server.HostUsername));
+		FString playerCount = FString::Printf(TEXT("%d/%d"), server.CurrentPlayers, server.MaxPlayers);
+		Row->PlayerCount->SetText(FText::FromString(playerCount));
 		Row->Setup(this, i++);
 		ServerListBox->AddChild(Row);
 	}
@@ -142,7 +155,14 @@ void UMainMenu::RefreshServerList()
 {
 	if (!MenuInterface) return;
 	UE_LOG(LogTemp, Warning, TEXT("Refreshing server list"));
+	isLoadingServers = true;
 	MenuInterface->LoadServers();
+}
+
+void UMainMenu::OpenHostGameMenu()
+{
+	if (!MenuSwitcher) return;
+	MenuSwitcher->SetActiveWidget(HostGameMenu);
 }
 
 void UMainMenu::UpdateChildren()
