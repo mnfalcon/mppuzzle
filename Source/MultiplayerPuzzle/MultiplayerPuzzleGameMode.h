@@ -11,8 +11,15 @@ class AMultiplayerPuzzleGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+private:
+	TSubclassOf<class UUserWidget> ErrorDisplayClass;
+
 public:
 	AMultiplayerPuzzleGameMode();
+
+protected:
+	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = TEXT("")) override;
+
 };
 
 

@@ -6,7 +6,7 @@
 
 void UMenuWidget::OpenMenu()
 {
-	this->AddToViewport();
+	this->AddToViewport(900);
 
 	UWorld* World = GetWorld();
 	if (!World) return;

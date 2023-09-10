@@ -21,6 +21,9 @@ private:
 	TSubclassOf<class UUserWidget> MainMenuClass;
 	class UMainMenu* Menu;
 
+	TSubclassOf<class UUserWidget> ErrorDisplayClass;
+	class ErrorNotificationDisplay* ErrorDisplay;
+
 	TSubclassOf<class UUserWidget> InGameMenuClass;
 	class UInGameMenu* InGameMenu;
 

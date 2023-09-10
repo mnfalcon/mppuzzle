@@ -9,6 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include "UI/MainMenu.h"
 #include "UI/InGameMenu.h"
+#include "UI/ErrorNotificationDisplay.h"
 
 
 const static FName SESSION_NAME = NAME_GameSession;
@@ -41,8 +42,16 @@ UPuzzlePlatformGameInstance::UPuzzlePlatformGameInstance(const FObjectInitialize
 		UE_LOG(LogTemp, Error, TEXT("InGameMenuBP not found!"));
 		return;
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Found %s"), *InGameMenuBP.Class->GetName());
 	InGameMenuClass = InGameMenuBP.Class;
+	/*UE_LOG(LogTemp, Warning, TEXT("Found %s"), *InGameMenuBP.Class->GetName());*/
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> ErrorDisplayBP(TEXT("/Game/UI/WBP_ErrorDisplay"));
+	if (!ensure(ErrorDisplayBP.Class != nullptr))
+	{
+		UE_LOG(LogTemp, Error, TEXT("ErrorDisplayBP not found!"));
+		return;
+	}
+	ErrorDisplayClass = ErrorDisplayBP.Class;
 }
 
 void UPuzzlePlatformGameInstance::Init()
@@ -128,13 +137,35 @@ void UPuzzlePlatformGameInstance::OnDestroySessionComplete(FName SessionName, bo
 
 void UPuzzlePlatformGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
 {
-	LoadMainMenu();
+	APlayerController* PC = GetFirstLocalPlayerController();
+	if (!ensure(PC != nullptr)) return;
+	FString errorTitle = "Network Error";
+	TMap<ENetworkFailure::Type, FString> NetworkFailureMap;
+
+	// Populate the map with keys and values
+	NetworkFailureMap.Add(ENetworkFailure::NetDriverAlreadyExists, TEXT("A relevant net driver has already been created for this service"));
+	NetworkFailureMap.Add(ENetworkFailure::NetDriverCreateFailure, TEXT("The net driver creation failed"));
+	NetworkFailureMap.Add(ENetworkFailure::NetDriverListenFailure, TEXT("The net driver failed its Listen() call"));
+	NetworkFailureMap.Add(ENetworkFailure::ConnectionLost, TEXT("A connection to the net driver has been lost"));
+	NetworkFailureMap.Add(ENetworkFailure::ConnectionTimeout, TEXT("A connection to the net driver has timed out"));
+	NetworkFailureMap.Add(ENetworkFailure::FailureReceived, TEXT("The net driver received an NMT_Failure message"));
+	NetworkFailureMap.Add(ENetworkFailure::OutdatedClient, TEXT("The client needs to upgrade their game"));
+	NetworkFailureMap.Add(ENetworkFailure::OutdatedServer, TEXT("The server needs to upgrade their game"));
+	NetworkFailureMap.Add(ENetworkFailure::PendingConnectionFailure, TEXT("There was an error during connection to the game"));
+	NetworkFailureMap.Add(ENetworkFailure::NetGuidMismatch, TEXT("NetGuid mismatch"));
+	NetworkFailureMap.Add(ENetworkFailure::NetChecksumMismatch, TEXT("Network checksum mismatch"));
+
+	// Access values in the map by key
+	FString ErrorMessage = NetworkFailureMap[FailureType];
+	
+	FString address = FString::Printf(TEXT("/Game/UI/MainMenu?showError=true?errorMessage=%s?errorTitle=%s"), *ErrorMessage, *errorTitle);
+	PC->ClientTravel(address, ETravelType::TRAVEL_Absolute);
 
 	UEngine* Engine = GetEngine();
 
 	if (!Engine) return;
-
-	Engine->AddOnScreenDebugMessage(0, 3, FColor::Red, TEXT("Network error. Returning to main menu."));
+	Engine->AddOnScreenDebugMessage(0, 5, FColor::Red, TEXT("Network error. Returning to main menu."));
+	UE_LOG(LogTemp, Warning, TEXT("Network error.Returning to main menu."));
 }
 
 void UPuzzlePlatformGameInstance::OnFindSessionsComplete(bool Success)

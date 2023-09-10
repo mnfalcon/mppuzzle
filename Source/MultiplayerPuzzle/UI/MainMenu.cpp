@@ -195,3 +195,7 @@ void UMainMenu::BackToMainMenu()
 	bIsHosting = false;
 }
 
+void UMainMenu::DisplayNotification(FString title, FString message)
+{
+
+}

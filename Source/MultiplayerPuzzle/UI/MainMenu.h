@@ -104,6 +104,8 @@ private:
 	UFUNCTION()
 		void BackToMainMenu();
 	UFUNCTION()
+	void DisplayNotification(FString title, FString message);
+	UFUNCTION()
 		void RefreshServerList();
 	UFUNCTION()
 		void OpenHostGameMenu();
