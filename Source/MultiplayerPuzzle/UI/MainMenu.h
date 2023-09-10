@@ -31,6 +31,7 @@ class MULTIPLAYERPUZZLE_API UMainMenu : public UMenuWidget
 private:
 
 	bool bIsHosting = false;
+	bool bIsInServerListMenu = false;
 
 	TSubclassOf<class UUserWidget> ServerRowClass;
 		

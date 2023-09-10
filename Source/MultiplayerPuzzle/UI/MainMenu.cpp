@@ -103,6 +103,7 @@ void UMainMenu::OpenServerListScreen()
 	if (!JoinMenu) return;
 	UE_LOG(LogTemp, Warning, TEXT("Opening Server List"));
 	MenuSwitcher->SetActiveWidget(ServerListMenu);
+	bIsInServerListMenu = true;
 	if (!MenuInterface) return;
 	isLoadingServers = true;
 	MenuInterface->LoadServers();
@@ -124,7 +125,11 @@ void UMainMenu::JoinServer()
 void UMainMenu::SetServerList(TArray<FServerData> servers)
 {
 	if (bIsHosting) return;
-
+	if (!bIsInServerListMenu) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not in server list menu. Skipping set server list..."));
+		return;
+	}
 	UWorld* World = this->GetWorld();
 	if (!ensure(World != nullptr)) return;
 
@@ -192,6 +197,10 @@ void UMainMenu::BackToMainMenu()
 	//UE_LOG(LogTemp, Warning, TEXT("Opening Join Menu"));
 
 	MenuSwitcher->SetActiveWidget(MainMenu);
+	if (bIsInServerListMenu)
+	{
+		bIsInServerListMenu = false;
+	}
 	bIsHosting = false;
 }
 
